@@ -16,7 +16,7 @@ namespace ClassLibrary
             throw new NotImplementedException();
         }
 
-        ReturnData IDataAccess.GetItemById(int id)
+        ReturnData IDataAccess.GetDataItemById(int id)
         {
             throw new NotImplementedException();
         }

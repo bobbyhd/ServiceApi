@@ -8,7 +8,7 @@ namespace ClassLibrary
 {
     public class DataAccessMock : IDataAccess
     {
-        List<ReturnData> _list = new List<ReturnData>();
+
 
         IEnumerable<ReturnData> IDataAccess.GetDataList()
         {
@@ -25,9 +25,10 @@ namespace ClassLibrary
             return list;
         }
 
-        ReturnData IDataAccess.GetItemById(int id)
+        ReturnData IDataAccess.GetDataItemById(int id)
         {
-            var retItem = _list.FirstOrDefault(x => x.Id == id);
+            var list = ((IDataAccess) this).GetDataList();
+            var retItem = list.FirstOrDefault(x => x.Id == id);
             return retItem;
         }
 

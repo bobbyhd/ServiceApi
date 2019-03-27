@@ -8,6 +8,6 @@ namespace ClassLibrary.Models
     {
         IEnumerable<ReturnData> GetDataList();
         void DeleteDataById(int id);
-        ReturnData GetItemById(int id);
+        ReturnData GetDataItemById(int id);
     }
 }
