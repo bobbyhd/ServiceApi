@@ -28,5 +28,14 @@ namespace UnitTestProject
             Assert.IsNotNull(retList);
         }
 
+        [TestMethod]
+        public void ReadOracleData()
+        {
+            IDataAccess da = new DataAccess();
+            var retList = da.ReadOracle();
+
+            Assert.IsNotNull(retList);
+        }
+
     }
 }

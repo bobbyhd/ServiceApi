@@ -9,5 +9,8 @@ namespace ClassLibrary.Models
         IEnumerable<ReturnData> GetDataList();
         void DeleteDataById(int id);
         ReturnData GetDataItemById(int id);
+
+        string ReadOracle();
+
     }
 }

@@ -36,5 +36,10 @@ namespace ClassLibrary
         {
             throw new NotImplementedException();
         }
+
+        public string ReadOracle()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
