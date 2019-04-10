@@ -17,7 +17,7 @@ namespace ClassLibrary
             {
                 var ret = new ReturnData
                 {
-                    Id = 0
+                    Id = i.ToString()
                 };
                 list.Add(ret);
             }
@@ -25,14 +25,14 @@ namespace ClassLibrary
             return list;
         }
 
-        ReturnData IDataAccess.GetDataItemById(int id)
+        ReturnData IDataAccess.GetDataItemById(string id)
         {
             var list = ((IDataAccess) this).GetDataList();
             var retItem = list.FirstOrDefault(x => x.Id == id);
             return retItem;
         }
 
-        void IDataAccess.DeleteDataById(int id)
+        void IDataAccess.DeleteDataById(string id)
         {
             throw new NotImplementedException();
         }

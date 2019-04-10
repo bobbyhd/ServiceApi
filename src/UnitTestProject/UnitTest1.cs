@@ -22,14 +22,22 @@ namespace UnitTestProject
         [TestMethod]
         public void GetDataById()
         {
-            IDataAccess da = new DataAccessMock();
-            var retList = da.GetDataItemById(0);
+            IDataAccess da = new DataAccess();
+            var retList = da.GetDataItemById("Vendor-000000016");
 
             Assert.IsNotNull(retList);
         }
 
         [TestMethod]
-        public void ReadOracleData()
+        public void GetSqlData()
+        {
+            IDataAccess da = new DataAccess();
+            var retList = da.GetDataList();
+
+            Assert.IsNotNull(retList);
+        }
+        [TestMethod]
+        public void GetOracleData()
         {
             IDataAccess da = new DataAccess();
             var retList = da.ReadOracle();

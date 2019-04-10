@@ -7,8 +7,8 @@ namespace ClassLibrary.Models
     public interface IDataAccess
     {
         IEnumerable<ReturnData> GetDataList();
-        void DeleteDataById(int id);
-        ReturnData GetDataItemById(int id);
+        void DeleteDataById(string id);
+        ReturnData GetDataItemById(string id);
 
         string ReadOracle();
 

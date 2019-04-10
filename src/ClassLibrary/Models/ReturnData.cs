@@ -6,6 +6,6 @@ namespace ClassLibrary.Models
 {
     public class ReturnData
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
     }
 }
