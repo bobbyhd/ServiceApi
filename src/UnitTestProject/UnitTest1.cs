@@ -23,7 +23,7 @@ namespace UnitTestProject
         public void GetDataById()
         {
             IDataAccess da = new DataAccess();
-            var retList = da.GetDataItemById("Vendor-000000016");
+            var retList = da.GetDataItemById("743347989");
 
             Assert.IsNotNull(retList);
         }

@@ -40,7 +40,7 @@ namespace ClassLibrary
                     {
                         con.Open();
                         var sql = "SELECT TOP 10 [MSTR_SUP_ID] ,[CONT_NAME] ,[CONT_F_NAME] ,[CONT_L_NAME] ,[CONT_EMAIL] ,[CONT_STATUS] ,[LoadDate] FROM [CONTACTS]";
-                       
+
 
                         if (id != null)
                         {
@@ -88,17 +88,32 @@ namespace ClassLibrary
 
             using (OracleConnection con = new OracleConnection(conString))
             {
-                using (OracleCommand cmd = con.CreateCommand())
+                try
                 {
-                    try
-                    {
-                        con.Open();
-                        cmd.BindByName = true;
-                        cmd.CommandText = "select * from Lax where rownum = :num";
-                        OracleParameter num = new OracleParameter("num", 1);
-                        cmd.Parameters.Add(num);
+                    con.Open();
+                    OracleCommand cmd1 = con.CreateCommand();
+                    cmd1.BindByName = true;
+                    cmd1.CommandText = "begin stepview.pimviewapipck.setviewcontext('EN US All', 'Main'); end;";
+                    cmd1.ExecuteNonQuery();
 
-                        //Execute the command and use DataReader to display the data
+                    using (OracleCommand cmd = con.CreateCommand())
+                    {
+
+
+                        var sql = "select * " +
+                                  "from classification_v c1 " +
+                                  "left join link_v l1 ON c1.id = l1.childid " +
+                                  "inner join classification_v c2 ON l1.parentid = c2.id " +
+                                  "inner join link_v l2 ON c2.id = l2.childid " +
+                                  "inner join classification_v c3 ON l2.parentid = c3.id " +
+                                  $"where c1.subtypeid = '743347989'";
+
+                        cmd.BindByName = true;
+                        cmd.CommandText = sql;
+                        OracleParameter num = new OracleParameter("id", "743347989");
+                        //cmd.Parameters.Add(num);
+
+                        //Execute the command and use DataReader to display the data 
                         using (OracleDataReader reader = cmd.ExecuteReader())
                         {
 
@@ -111,14 +126,15 @@ namespace ClassLibrary
                         return retValue;
 
                     }
-                    catch (OracleException oracleExceptionex)
-                    {
-                        throw oracleExceptionex;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
+
+                }
+                catch (OracleException oracleExceptionex)
+                {
+                    throw oracleExceptionex;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
                 }
             }
         }
