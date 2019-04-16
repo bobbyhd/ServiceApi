@@ -37,7 +37,7 @@ namespace ClassLibrary
             throw new NotImplementedException();
         }
 
-        public string ReadOracle()
+        public List<OracleData> ReadOracle(string subTypeId)
         {
             throw new NotImplementedException();
         }

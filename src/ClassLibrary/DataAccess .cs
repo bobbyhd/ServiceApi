@@ -28,116 +28,137 @@ namespace ClassLibrary
 
         private static IEnumerable<ReturnData> ReadSqlData(string id = null)
         {
-            string conString = AppConfiguration.SqlConnectionString;
+            string conString =
+                "Data Source=151.140.50.123;Initial Catalog=HDLINK;Integrated Security=True"; //  AppConfiguration.SqlConnectionString;
 
             var retValue = new List<ReturnData>();
-
-            using (var con = new SqlConnection(conString))
+            try
             {
-                using (var cmd = con.CreateCommand())
+                using (var con = new SqlConnection(conString))
                 {
-                    try
+                    using (var cmd = con.CreateCommand())
                     {
-                        con.Open();
-                        var sql = "SELECT TOP 10 [MSTR_SUP_ID] ,[CONT_NAME] ,[CONT_F_NAME] ,[CONT_L_NAME] ,[CONT_EMAIL] ,[CONT_STATUS] ,[LoadDate] FROM [CONTACTS]";
 
+                        con.Open();
+                        var sql =
+                            "SELECT TOP 10 [MSTR_SUP_ID] ,[CONT_NAME] ,[CONT_F_NAME] ,[CONT_L_NAME] ,[CONT_EMAIL] ,[CONT_STATUS] ,[LoadDate] FROM [CONTACTS]";
 
                         if (id != null)
                         {
                             sql += $" Where [MSTR_SUP_ID] = '{id}'";
                         }
+
                         cmd.CommandText = sql;
                         //if (id != null)
                         //{
                         //    SqlParameter idParameter = new SqlParameter("id", id);
                         //    cmd.Parameters.Add(idParameter);
                         //}
-
-
                         //Execute the command and use DataReader to display the data
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                retValue.Add(new ReturnData { Id = reader[0].ToString() });
+                                retValue.Add(new ReturnData {Id = reader[0].ToString()});
                             }
                         }
-
-                        return retValue;
-                    }
-                    catch (OracleException oracleExceptionex)
-                    {
-                        throw oracleExceptionex;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
                     }
                 }
             }
-        }
-
-
-
-        public string ReadOracle()
-        {
-            //Create a connection to Oracle			
-            string conString = AppConfiguration.OracleConnectionString;
-
-            string retValue = null;
-
-            using (OracleConnection con = new OracleConnection(conString))
+            catch (SqlException sqlException)
             {
-                try
+                retValue.Add(new ReturnData
                 {
-                    con.Open();
-                    OracleCommand cmd1 = con.CreateCommand();
-                    cmd1.BindByName = true;
-                    cmd1.CommandText = "begin stepview.pimviewapipck.setviewcontext('EN US All', 'Main'); end;";
-                    cmd1.ExecuteNonQuery();
+                    Id = $"Data Exception: {sqlException.Message}" 
+                });
+            }
+            catch (Exception ex)
+            {
+                retValue.Add(new ReturnData
+                {
+                    Id = $"Data Exception: {ex.Message}"
+                });
+            }
+            return retValue;
+        }
 
-                    using (OracleCommand cmd = con.CreateCommand())
+        public List<OracleData> ReadOracle(string subTypeId)
+{
+    //Create a connection to Oracle			
+    string conString =
+        "User Id=Stepview;Password=nopride2012;Data Source=spragor23-scan.homedepot.com:1521/DPR23MMS_SRO01;Connection Timeout=300";// AppConfiguration.OracleConnectionString;
+
+    List<OracleData> retValue = new List<OracleData>();
+    try
+    {
+        using (OracleConnection con = new OracleConnection(conString))
+        {
+            con.Open();
+            OracleCommand cmd1 = con.CreateCommand();
+            cmd1.BindByName = true;
+            cmd1.CommandText = "begin stepview.pimviewapipck.setviewcontext('EN US All', 'Main'); end;";
+            cmd1.ExecuteNonQuery();
+
+            using (OracleCommand cmd = con.CreateCommand())
+            {
+                var sql = "select c3.name as VendorID, " +
+                          "pimviewapipck.getcontextname(c3.id, 5976913, 200) AS VendorName, " +
+                          "c2.name as GLN " +
+                          "from classification_v c1 " +
+                          "left join link_v l1 ON c1.id = l1.childid " +
+                          "inner join classification_v c2 ON l1.parentid = c2.id " +
+                          "inner join link_v l2 ON c2.id = l2.childid " +
+                          "inner join classification_v c3 ON l2.parentid = c3.id " +
+                          $"where c1.subtypeid = '{subTypeId}'";
+
+                cmd.BindByName = true;
+                cmd.CommandText = sql;
+              
+                OracleParameter num = new OracleParameter("id", "743347989");
+                //cmd.Parameters.Add(num);
+
+                //Execute the command and use DataReader to display the data 
+                using (OracleDataReader reader = cmd.ExecuteReader())
+                {
+
+                    while (reader.Read())
                     {
-
-
-                        var sql = "select * " +
-                                  "from classification_v c1 " +
-                                  "left join link_v l1 ON c1.id = l1.childid " +
-                                  "inner join classification_v c2 ON l1.parentid = c2.id " +
-                                  "inner join link_v l2 ON c2.id = l2.childid " +
-                                  "inner join classification_v c3 ON l2.parentid = c3.id " +
-                                  $"where c1.subtypeid = '743347989'";
-
-                        cmd.BindByName = true;
-                        cmd.CommandText = sql;
-                        OracleParameter num = new OracleParameter("id", "743347989");
-                        //cmd.Parameters.Add(num);
-
-                        //Execute the command and use DataReader to display the data 
-                        using (OracleDataReader reader = cmd.ExecuteReader())
+                        retValue.Add(new OracleData
                         {
-
-                            while (reader.Read())
-                            {
-                                retValue = reader[0].ToString();
-                            }
-                        }
-
-                        return retValue;
-
+                            VendorID = reader["VendorID"].ToString(),
+                            VendorName = reader["VendorName"].ToString(),
+                            GLN = reader["GLN"].ToString()
+                        });
                     }
+                }
 
-                }
-                catch (OracleException oracleExceptionex)
-                {
-                    throw oracleExceptionex;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                //return retValue;
             }
         }
+    }
+    catch (OracleException oracleExceptionex)
+    {
+        var oracleError = new OracleData
+        {
+            GLN = "-",
+            VendorID = "Data Exception",
+            VendorName = oracleExceptionex.Message
+        };
+        retValue.Add(oracleError);
+    }
+    catch (Exception ex)
+    {
+        var oracleError = new OracleData
+        {
+            GLN = "-",
+            VendorID = "General Exception",
+            VendorName = ex.Message
+        };
+        retValue.Add(oracleError);
+
+    }
+    return retValue;
+}
     }
 
 

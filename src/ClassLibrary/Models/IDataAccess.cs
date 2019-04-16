@@ -10,7 +10,7 @@ namespace ClassLibrary.Models
         void DeleteDataById(string id);
         ReturnData GetDataItemById(string id);
 
-        string ReadOracle();
+        List<OracleData> ReadOracle(string subTypeId);
 
     }
 }

@@ -12,18 +12,17 @@ namespace UnitTestProject
         [TestMethod]
         public void GetListOfData()
         {
-            IDataAccess da = new DataAccessMock();
+            IDataAccess da = new DataAccess();
             var retList = da.GetDataList().ToList();
 
             Assert.IsTrue(retList.Any());
-
         }
 
         [TestMethod]
         public void GetDataById()
         {
             IDataAccess da = new DataAccess();
-            var retList = da.GetDataItemById("743347989");
+            var retList = da.GetDataItemById("Vendor-000000002");
 
             Assert.IsNotNull(retList);
         }
@@ -37,10 +36,10 @@ namespace UnitTestProject
             Assert.IsNotNull(retList);
         }
         [TestMethod]
-        public void GetOracleData()
+        public void GetOracleDataList()
         {
             IDataAccess da = new DataAccess();
-            var retList = da.ReadOracle();
+            var retList = da.ReadOracle("743347989");
 
             Assert.IsNotNull(retList);
         }
