@@ -59,7 +59,7 @@ namespace ClassLibrary
                         {
                             while (reader.Read())
                             {
-                                retValue.Add(new ReturnData {Id = reader[0].ToString()});
+                                retValue.Add(new ReturnData { Id = reader[0].ToString() });
                             }
                         }
                     }
@@ -69,7 +69,7 @@ namespace ClassLibrary
             {
                 retValue.Add(new ReturnData
                 {
-                    Id = $"Data Exception: {sqlException.Message}" 
+                    Id = $"Data Exception: {sqlException.Message}"
                 });
             }
             catch (Exception ex)
@@ -83,82 +83,85 @@ namespace ClassLibrary
         }
 
         public List<OracleData> ReadOracle(string subTypeId)
-{
-    //Create a connection to Oracle			
-    string conString =
-        "User Id=Stepview;Password=nopride2012;Data Source=spragor23-scan.homedepot.com:1521/DPR23MMS_SRO01;Connection Timeout=300";// AppConfiguration.OracleConnectionString;
-
-    List<OracleData> retValue = new List<OracleData>();
-    try
-    {
-        using (OracleConnection con = new OracleConnection(conString))
         {
-            con.Open();
-            OracleCommand cmd1 = con.CreateCommand();
-            cmd1.BindByName = true;
-            cmd1.CommandText = "begin stepview.pimviewapipck.setviewcontext('EN US All', 'Main'); end;";
-            cmd1.ExecuteNonQuery();
+            //Create a connection to Oracle			
+            string conString =
+                "User Id=Stepview;Password=nopride2012;Data Source=spragor23-scan:1521/DPR23MMS_SRO01;Connection Timeout=600";// AppConfiguration.OracleConnectionString;
 
-            using (OracleCommand cmd = con.CreateCommand())
+            conString =
+                    "Data Source=snpagor24-scan:1521/dqp026mm_srw01; User Id=stepview; Password=stepview;";
+
+            List<OracleData> retValue = new List<OracleData>();
+            try
             {
-                var sql = "select c3.name as VendorID, " +
-                          "pimviewapipck.getcontextname(c3.id, 5976913, 200) AS VendorName, " +
-                          "c2.name as GLN " +
-                          "from classification_v c1 " +
-                          "left join link_v l1 ON c1.id = l1.childid " +
-                          "inner join classification_v c2 ON l1.parentid = c2.id " +
-                          "inner join link_v l2 ON c2.id = l2.childid " +
-                          "inner join classification_v c3 ON l2.parentid = c3.id " +
-                          $"where c1.subtypeid = '{subTypeId}'";
-
-                cmd.BindByName = true;
-                cmd.CommandText = sql;
-              
-                OracleParameter num = new OracleParameter("id", "743347989");
-                //cmd.Parameters.Add(num);
-
-                //Execute the command and use DataReader to display the data 
-                using (OracleDataReader reader = cmd.ExecuteReader())
+                using (OracleConnection con = new OracleConnection(conString))
                 {
+                    con.Open();
+                    OracleCommand cmd1 = con.CreateCommand();
+                    cmd1.BindByName = true;
+                    cmd1.CommandText = "begin stepview.pimviewapipck.setviewcontext('EN US All', 'Main'); end;";
+                    cmd1.ExecuteNonQuery();
 
-                    while (reader.Read())
+                    using (OracleCommand cmd = con.CreateCommand())
                     {
-                        retValue.Add(new OracleData
+                        var sql = "select c3.name as VendorID, " +
+                                  "pimviewapipck.getcontextname(c3.id, 5976913, 200) AS VendorName, " +
+                                  "c2.name as GLN " +
+                                  "from classification_v c1 " +
+                                  "left join link_v l1 ON c1.id = l1.childid " +
+                                  "inner join classification_v c2 ON l1.parentid = c2.id " +
+                                  "inner join link_v l2 ON c2.id = l2.childid " +
+                                  "inner join classification_v c3 ON l2.parentid = c3.id " +
+                                  $"where c1.subtypeid = '{subTypeId}'";
+
+                        cmd.BindByName = true;
+                        cmd.CommandText = sql;
+
+                        OracleParameter num = new OracleParameter("id", "743347989");
+                        //cmd.Parameters.Add(num);
+
+                        //Execute the command and use DataReader to display the data 
+                        using (OracleDataReader reader = cmd.ExecuteReader())
                         {
-                            VendorID = reader["VendorID"].ToString(),
-                            VendorName = reader["VendorName"].ToString(),
-                            GLN = reader["GLN"].ToString()
-                        });
+
+                            while (reader.Read())
+                            {
+                                retValue.Add(new OracleData
+                                {
+                                    VendorID = reader["VendorID"].ToString(),
+                                    VendorName = reader["VendorName"].ToString(),
+                                    GLN = reader["GLN"].ToString()
+                                });
+                            }
+                        }
+
+                        //return retValue;
                     }
                 }
-
-                //return retValue;
             }
-        }
-    }
-    catch (OracleException oracleExceptionex)
-    {
-        var oracleError = new OracleData
-        {
-            GLN = "-",
-            VendorID = "Data Exception",
-            VendorName = oracleExceptionex.Message
-        };
-        retValue.Add(oracleError);
-    }
-    catch (Exception ex)
-    {
-        var oracleError = new OracleData
-        {
-            GLN = "-",
-            VendorID = "General Exception",
-            VendorName = ex.Message
-        };
-        retValue.Add(oracleError);
+            catch (OracleException oracleExceptionex)
+            {
+                var oracleError = new OracleData
+                {
+                    GLN = "-",
+                    VendorID = "Data Exception",
+                    VendorName = oracleExceptionex.Message
+                };
+                retValue.Add(oracleError);
+            }
+            catch (Exception ex)
+            {
+                var oracleError = new OracleData
+                {
+                    GLN = "-",
+                    VendorID = "General Exception",
+                    VendorName = ex.Message
+                };
+                retValue.Add(oracleError);
 
-    }
-    return retValue;
-}
+            }
+            return retValue;
+        }
     }
 
 
