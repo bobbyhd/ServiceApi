@@ -29,8 +29,8 @@ namespace ClassLibrary
         private static IEnumerable<ReturnData> ReadSqlData(string id = null)
         {
             string conString =
-                "Data Source=151.140.50.123;Initial Catalog=HDLINK;Integrated Security=True"; //  AppConfiguration.SqlConnectionString;
-
+                //"Data Source=151.140.50.123;Initial Catalog=HDLINK;Integrated Security=True"; //  AppConfiguration.SqlConnectionString;
+                "Data Source=151.140.50.123;Initial Catalog=HDLINK;pwd=nED6S7tM8Idj; user ID=QCSQLReporting"; //  AppConfiguration.SqlConnectionString;
             var retValue = new List<ReturnData>();
             try
             {

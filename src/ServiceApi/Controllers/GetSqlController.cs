@@ -10,9 +10,9 @@ namespace ServiceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GetSqlController : ControllerBase
+    public class RegulatoryReportController : ControllerBase
     {
-        // GET api/getsql
+        // GET api/RegulatoryReport
         [HttpGet]
         public ActionResult<IEnumerable<ReturnData>> Get()
         {
@@ -21,7 +21,7 @@ namespace ServiceApi.Controllers
             return retList;
         }
 
-        // GET api/getsql/5
+        // GET api/RegulatoryReport/5
         [HttpGet("{id}", Name = "Get")]
         public ActionResult<ReturnData> Get(string id)
         {
@@ -30,19 +30,19 @@ namespace ServiceApi.Controllers
             return retList;
         }
 
-        // POST api/getsql
+        // POST api/RegulatoryReport
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/getsql/5
+        // PUT api/RegulatoryReport/5
         [HttpPut("{id}")]
         public void Put(string id, [FromBody] string value)
         {
         }
 
-        // DELETE api/getsql/5
+        // DELETE api/RegulatoryReport/5
         [HttpDelete("{id}")]
         public void Delete(string id)
         {

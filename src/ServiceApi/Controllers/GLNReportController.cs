@@ -11,9 +11,9 @@ namespace ServiceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GetOracleController : ControllerBase
+    public class GLNReportController : ControllerBase
     {
-        // GET: api/GetOracleData
+        // GET: api/GLNReport
         [HttpGet("{subTypeId}")]
         public IEnumerable<OracleData> Get(string subTypeId)
         {
@@ -24,19 +24,19 @@ namespace ServiceApi.Controllers
         }
 
 
-        // POST: api/GetOracleData
+        // POST: api/GLNReport
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT: api/GetOracleData/5
+        // PUT: api/GLNReport/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/GLNReport/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
