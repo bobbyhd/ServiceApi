@@ -1,0 +1,9 @@
+﻿applications:
+- name: dotnethdqcdataservice
+  host: dotnethdqcdataservice
+  instances: 1
+  memory: 1024M
+  buildpack: https://github.com/cloudfoundry/dotnet-core-buildpack.git
+
+ 
+  

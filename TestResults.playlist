@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="UnitTestProject.UnitTest1.GetOracleDataList" /><Add Test="UnitTestProject.UnitTest1.GetSqlData" /><Add Test="UnitTestProject.UnitTest1.GetDataById" /><Add Test="UnitTestProject.UnitTest1.GetListOfData" /></Playlist>
